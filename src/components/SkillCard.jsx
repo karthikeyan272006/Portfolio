@@ -1,28 +1,20 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
 
 export const SkillCard = ({ category }) => {
     const { category: title, description, skills = [] } = category;
+    const [activeSkill, setActiveSkill] = useState(null);
 
-    const renderIcon = (iconName) => {
+    const renderIcon = (iconName, size = 16) => {
         const IconComponent = Icons[iconName] || Icons.Code;
-        return <IconComponent size={16} />;
-    };
-
-    // Skill level default mapping if not specified
-    const getSkillLevel = (skillName) => {
-        const name = skillName.toLowerCase();
-        if (name.includes('sql') || name.includes('power bi') || name.includes('excel') || name.includes('pandas')) return 92;
-        if (name.includes('python') || name.includes('dax') || name.includes('cleaning') || name.includes('eda')) return 88;
-        if (name.includes('git') || name.includes('tableau') || name.includes('statistics')) return 82;
-        return 85;
+        return <IconComponent size={size} />;
     };
 
     return (
         <motion.div
             className="skill-category-card"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             whileHover={{ y: -6, borderColor: 'var(--accent-primary)', boxShadow: 'var(--shadow-glow)' }}
@@ -36,6 +28,7 @@ export const SkillCard = ({ category }) => {
                 flexDirection: 'column'
             }}
         >
+            {/* Card header */}
             <div className="skill-category-header" style={{ marginBottom: '0.5rem' }}>
                 <h3 className="skill-category-title" style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                     {title}
@@ -45,50 +38,117 @@ export const SkillCard = ({ category }) => {
                 {description}
             </p>
 
-            <div className="skills-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {/* Interactive skill badges */}
+            <div
+                style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.6rem',
+                }}
+            >
                 {skills.map((skill, idx) => {
-                    const level = getSkillLevel(skill.name);
+                    const isActive = activeSkill === idx;
                     return (
-                        <div key={idx} style={{ width: '100%' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: '700', fontSize: '0.9rem', color: 'var(--text-primary)' }}>
-                                    <span style={{ color: 'var(--accent-primary)', display: 'flex' }}>
-                                        {renderIcon(skill.icon)}
-                                    </span>
-                                    <span>{skill.name}</span>
-                                </div>
-                                <span style={{ fontSize: '0.78rem', fontFamily: 'var(--font-mono)', color: 'var(--accent-primary)', fontWeight: '700' }}>
-                                    {level}%
-                                </span>
-                            </div>
-
-                            {/* Animated Skill Meter Bar */}
-                            <div
+                        <motion.button
+                            key={idx}
+                            onClick={() => setActiveSkill(isActive ? null : idx)}
+                            initial={{ opacity: 0, scale: 0.85 }}
+                            whileInView={{ opacity: 1, scale: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: idx * 0.04, type: 'spring', stiffness: 300, damping: 22 }}
+                            whileHover={{ scale: 1.08, y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.4rem',
+                                padding: '0.42rem 0.85rem',
+                                borderRadius: '999px',
+                                border: isActive
+                                    ? '1.5px solid var(--accent-primary)'
+                                    : '1.5px solid var(--border-color)',
+                                background: isActive
+                                    ? 'linear-gradient(135deg, var(--accent-primary)22, var(--accent-secondary)18)'
+                                    : 'var(--bg-tertiary)',
+                                color: isActive ? 'var(--accent-primary)' : 'var(--text-secondary)',
+                                fontSize: '0.82rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                outline: 'none',
+                                transition: 'background 0.2s, border-color 0.2s, color 0.2s',
+                                boxShadow: isActive ? '0 0 10px var(--accent-primary)44' : 'none',
+                                position: 'relative',
+                                overflow: 'hidden',
+                            }}
+                        >
+                            {/* Shimmer sweep on hover */}
+                            <motion.span
                                 style={{
-                                    height: '6px',
-                                    width: '100%',
-                                    backgroundColor: 'var(--bg-tertiary)',
-                                    borderRadius: 'var(--radius-full)',
-                                    overflow: 'hidden',
-                                    position: 'relative'
+                                    position: 'absolute',
+                                    inset: 0,
+                                    background: 'linear-gradient(100deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%)',
+                                    pointerEvents: 'none',
                                 }}
-                            >
-                                <motion.div
-                                    initial={{ width: 0 }}
-                                    whileInView={{ width: `${level}%` }}
-                                    viewport={{ once: true }}
-                                    transition={{ duration: 1, delay: 0.1 + idx * 0.05, ease: 'easeOut' }}
-                                    style={{
-                                        height: '100%',
-                                        background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-secondary))',
-                                        borderRadius: 'var(--radius-full)'
-                                    }}
-                                />
-                            </div>
-                        </div>
+                                initial={{ x: '-100%' }}
+                                whileHover={{ x: '200%' }}
+                                transition={{ duration: 0.55, ease: 'easeInOut' }}
+                            />
+                            <span style={{ color: isActive ? 'var(--accent-primary)' : 'var(--accent-primary)', opacity: isActive ? 1 : 0.7, display: 'flex' }}>
+                                {renderIcon(skill.icon, 14)}
+                            </span>
+                            {skill.name}
+                            <AnimatePresence>
+                                {isActive && (
+                                    <motion.span
+                                        key="check"
+                                        initial={{ scale: 0, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        exit={{ scale: 0, opacity: 0 }}
+                                        transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                                        style={{ display: 'flex', color: 'var(--accent-primary)' }}
+                                    >
+                                        {renderIcon('CheckCircle2', 13)}
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
+                        </motion.button>
                     );
                 })}
             </div>
+
+            {/* Active skill highlight */}
+            <AnimatePresence>
+                {activeSkill !== null && (
+                    <motion.div
+                        key={activeSkill}
+                        initial={{ opacity: 0, y: 6, height: 0 }}
+                        animate={{ opacity: 1, y: 0, height: 'auto' }}
+                        exit={{ opacity: 0, y: -4, height: 0 }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        style={{
+                            marginTop: '1.1rem',
+                            padding: '0.65rem 1rem',
+                            borderRadius: 'var(--radius-md)',
+                            background: 'linear-gradient(135deg, var(--accent-primary)14, var(--accent-secondary)10)',
+                            border: '1px solid var(--accent-primary)44',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            overflow: 'hidden',
+                        }}
+                    >
+                        <span style={{ color: 'var(--accent-primary)', display: 'flex' }}>
+                            {renderIcon(skills[activeSkill]?.icon, 18)}
+                        </span>
+                        <span style={{ fontSize: '0.85rem', fontWeight: '600', color: 'var(--text-primary)' }}>
+                            {skills[activeSkill]?.name}
+                        </span>
+                        <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginLeft: 'auto' }}>
+                            ✦ selected
+                        </span>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </motion.div>
     );
 };

@@ -6,7 +6,7 @@ export const certificationsData = [
         year: "Nov 2025",
         type: "Course Certification",
         category: "course",
-        fileUrl: "/data_analytics_certificate.pdf",
+        fileUrl: "/certificates/data_analytics_certificate.pdf",
         skills: ["Data Analysis", "SQL Analytics", "Python EDA", "Data Cleaning", "Reporting"],
         description: "Comprehensive training covering exploratory data analysis, SQL queries, data cleaning, and statistical business reporting."
     },
@@ -17,7 +17,7 @@ export const certificationsData = [
         year: "May 2025",
         type: "Course Certification",
         category: "course",
-        fileUrl: "/power_bi_certificate.pdf",
+        fileUrl: "/certificates/power_bi_certificate.pdf",
         skills: ["Power BI", "DAX Formulas", "Data Modeling", "KPI Dashboards"],
         description: "Certification in designing interactive Power BI dashboards, DAX calculations, dimensional modeling, and operational KPI tracking."
     },
@@ -28,7 +28,7 @@ export const certificationsData = [
         year: "July 2025",
         type: "Internship Certificate",
         category: "internship",
-        fileUrl: "/internship_certificate.pdf",
+        fileUrl: "/certificates/internship_certificate.pdf",
         skills: ["Power Automate", "SharePoint", "Workflow Automation", "Process Optimization"],
         description: "Official internship completion certificate awarded by KONE Elevator India Pvt. Ltd for workflow automation and data analytics."
     }

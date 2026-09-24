@@ -72,18 +72,7 @@ export const Home = () => {
                             justifyContent: 'center',
                         }}
                     >
-                        <ProfileAvatar size="xl" showBadge={true} allowUpload={true} />
-                        <motion.p
-                            style={{
-                                fontSize: '0.75rem',
-                                color: 'var(--text-muted)',
-                                marginTop: '1rem',
-                                textAlign: 'center'
-                            }}
-                            whileHover={{ scale: 1.05 }}
-                        >
-                            💡 <span style={{ textDecoration: 'underline cursor-pointer' }}>Hover over photo to upload your picture</span>
-                        </motion.p>
+                        <ProfileAvatar size="xl" showBadge={true} />
                     </motion.div>
 
                     {/* Hero Right Column: Intro & Headline */}

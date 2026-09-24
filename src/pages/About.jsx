@@ -53,7 +53,7 @@ export const About = () => {
             >
                 {/* Circular Profile Avatar Container */}
                 <div style={{ textAlign: 'center' }}>
-                    <ProfileAvatar size="lg" showBadge={true} allowUpload={true} />
+                    <ProfileAvatar size="lg" showBadge={true} />
                     <h3 style={{ marginTop: '1.25rem', fontSize: '1.35rem', fontWeight: '800', color: 'var(--text-primary)' }}>
                         {personalData.name}
                     </h3>

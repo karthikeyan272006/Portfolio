@@ -1,20 +1,14 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import defaultProfileImg from '../assets/profile.png';
-import { Camera, RefreshCw } from 'lucide-react';
 
 export const ProfileAvatar = ({
     src = defaultProfileImg,
     alt = "Karthikeyan - Data Analyst Profile Picture",
     size = 'lg',
     showBadge = true,
-    allowUpload = true,
     className = ''
 }) => {
-    const [userImage, setUserImage] = useState(() => {
-        return localStorage.getItem('user_profile_picture') || src || defaultProfileImg;
-    });
-
     const sizeMap = {
         sm: { container: '90px', halo: '-6px', border: '3px' },
         md: { container: '150px', halo: '-8px', border: '4px' },
@@ -23,25 +17,7 @@ export const ProfileAvatar = ({
     };
 
     const currentSize = sizeMap[size] || sizeMap.lg;
-
-    const handleImageUpload = (event) => {
-        const file = event.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const base64Image = e.target.result;
-                setUserImage(base64Image);
-                localStorage.setItem('user_profile_picture', base64Image);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleResetImage = (e) => {
-        e.stopPropagation();
-        localStorage.removeItem('user_profile_picture');
-        setUserImage(defaultProfileImg);
-    };
+    const profileSrc = src || defaultProfileImg;
 
     return (
         <div
@@ -100,7 +76,7 @@ export const ProfileAvatar = ({
                 }}
             >
                 <img
-                    src={userImage}
+                    src={profileSrc}
                     alt={alt}
                     onError={(e) => {
                         e.target.onerror = null;
@@ -115,74 +91,7 @@ export const ProfileAvatar = ({
                         display: 'block',
                     }}
                 />
-
-                {/* Upload Hover Overlay */}
-                {allowUpload && (
-                    <label
-                        htmlFor="avatar-file-input"
-                        title="Click to upload your picture"
-                        style={{
-                            position: 'absolute',
-                            inset: 0,
-                            borderRadius: '50%',
-                            backgroundColor: 'rgba(15, 23, 42, 0.55)',
-                            backdropFilter: 'blur(3px)',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: '4px',
-                            color: '#ffffff',
-                            opacity: 0,
-                            transition: 'opacity 0.25s ease',
-                            cursor: 'pointer',
-                            zIndex: 4
-                        }}
-                        className="avatar-upload-overlay"
-                        onMouseEnter={(e) => e.currentTarget.style.opacity = '1'}
-                        onMouseLeave={(e) => e.currentTarget.style.opacity = '0'}
-                    >
-                        <Camera size={24} />
-                        <span style={{ fontSize: '0.7rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                            Upload Photo
-                        </span>
-                        <input
-                            id="avatar-file-input"
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            style={{ display: 'none' }}
-                        />
-                    </label>
-                )}
             </motion.div>
-
-            {/* Reset Photo Button if custom picture loaded */}
-            {allowUpload && localStorage.getItem('user_profile_picture') && (
-                <button
-                    onClick={handleResetImage}
-                    title="Reset to default image"
-                    style={{
-                        position: 'absolute',
-                        top: '4px',
-                        right: '4px',
-                        width: '28px',
-                        height: '28px',
-                        borderRadius: '50%',
-                        backgroundColor: 'var(--bg-card)',
-                        color: 'var(--text-secondary)',
-                        border: '1px solid var(--border-color)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        boxShadow: 'var(--shadow-sm)',
-                        zIndex: 5,
-                        cursor: 'pointer'
-                    }}
-                >
-                    <RefreshCw size={14} />
-                </button>
-            )}
 
             {/* Floating Status Badge */}
             {showBadge && (
